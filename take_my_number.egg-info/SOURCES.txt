@@ -1,0 +1,8 @@
+setup.py
+take_my_number/__init__.py
+take_my_number/models.py
+take_my_number.egg-info/PKG-INFO
+take_my_number.egg-info/SOURCES.txt
+take_my_number.egg-info/dependency_links.txt
+take_my_number.egg-info/requires.txt
+take_my_number.egg-info/top_level.txt
