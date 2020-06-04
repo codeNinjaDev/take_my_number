@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Portfolio
+{% endblock %}
+
+{% block main %}
+        <!--- Career Form --->
+        <div class="jumbotron">
+          <h1 class="display-4">Give Me a Number</h1>
+          <p class="lead">Lorem ipsum.</p>
+          <hr class="my-4">
+          <p>You can sign up as a vendor or as a customer.</p>
+          <a class="btn btn-primary btn-lg" href="/vendor" role="button">Go to Vendor Portal</a>
+          <a class="btn btn-primary btn-lg" href="/customer" role="button">Go to Customer Portal</a>
+
+        </div>
+        {% block js %}
+    {% endblock %}
+{% endblock %}
+

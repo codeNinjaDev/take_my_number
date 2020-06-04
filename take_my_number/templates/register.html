@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% block title %}
+    {% if user == "customer" %}
+        Register as Customer
+    {% else %}
+        Register as Vendor
+    {% endif %}
+{% endblock %}
+
+{% block main %}
+    {% if user == "customer" %}
+        <h2>Register as Customer</h2>
+    {% else %}
+        <h2>Register as Vendor</h2>
+    {% endif %}
+    <form action="/{{ user }}/register" method="post">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+
+      <div class="form-group">
+        {% if error %}
+            <div class="alert alert-danger" role="alert">Username taken</div>
+        {% endif %}
+
+  <hr>
+    {{ registration_form.csrf_token }}
+
+    {{ wtf.quick_form(registration_form) }}
+  <hr>
+
+
+{% endblock %}
+
+{% block js %}
+    <script src="/static/register.js"></script>
+{% endblock %}

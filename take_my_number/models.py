@@ -1,16 +1,13 @@
 from flask_mongoengine import MongoEngine
-from flask_user import UserMixin
 
-db = MongoEngine()
+from app import db
 
-
-class User(db.Document, UserMixin):
+class Vendor(db.Document):
     # User authentication information
     username = db.StringField(default='')
     password = db.StringField()
-    roles = db.ListField(db.StringField(), default=[])
-
-class Vendor(db.Document):
+    first_name = db.StringField(default='')
+    last_name = db.StringField(default='')
     brand = db.StringField(default='')
     location = db.PointField(auto_index=False)
     max_occupants = db.IntField()
@@ -27,8 +24,8 @@ class Order(db.EmbeddedDocument):
     called_number = db.BooleanField()
 
 class Customer(db.Document):
-    # User information
-    first_name = db.StringField(default='')
-    last_name = db.StringField(default='')
+    # Customer information
+    username = db.StringField(default='')
+    password = db.StringField()
     orders = db.ListField(db.EmbeddedDocumentField(Order))
 
