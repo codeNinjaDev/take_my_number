@@ -1,21 +1,76 @@
 {% extends "layout.html" %}
 
 {% block title %}
-    Portfolio
+    Customer
 {% endblock %}
 
 {% block main %}
-        <!--- Career Form --->
-        <div class="jumbotron">
-          <h1 class="display-4">Give Me a Number</h1>
-          <p class="lead">Lorem ipsum.</p>
-          <hr class="my-4">
-          <p>You can sign up as a vendor or as a customer.</p>
-          <a class="btn btn-primary btn-lg" href="/vendor" role="button">Go to Vendor Portal</a>
-          <a class="btn btn-primary btn-lg" href="/customer" role="button">Go to Customer Portal</a>
-
+        <a href="/customer/order">
+            <button class="mdc-fab mdc-fab--extended">
+              <div class="mdc-fab__ripple"></div>
+              <span class="material-icons mdc-fab__icon">add</span>
+              <span class="mdc-fab__label">Order</span>
+            </button>
+        </a>
+        <!--- Current orders --->
+        <div>
+            <h2>Pending Orders:</h2>
+            {% for order in order %}
+                <div class="mdc-card mdc-card--outlined">
+                    <h2>{{order.vendor}}</h2>
+                    <h3>Current number: <span class="vendor{{order.vendor_id}}"></span></h3>
+                    <div class="mdc-card__actions">
+                      <button class="mdc-button mdc-card__action mdc-card__action--button">
+                        <div class="mdc-button__ripple"></div>
+                        <span class="mdc-button__label">Postpone</span>
+                      </button>
+                      <button class="mdc-button mdc-card__action mdc-card__action--button">
+                        <div class="mdc-button__ripple"></div>
+                        <span class="mdc-button__label">Cancel</span>
+                      </button>
+                    </div>
+                </div>
+            {% endfor %}
         </div>
-        {% block js %}
+
+        <div>
+            <h2>Called Orders:</h2>
+            {% for order in order %}
+                <div class="mdc-card mdc-card--outlined">
+                    <h2>{{order.vendor}}</h2>
+                    <h3>Current number: <span class="vendor{{order.vendor_id}}"></span></h3>
+                    <div class="mdc-card__actions">
+                      <button class="mdc-button mdc-card__action mdc-card__action--button">
+                        <div class="mdc-button__ripple"></div>
+                        <span class="mdc-button__label">Cancel</span>
+                      </button>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+    {% block js %}
+        <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js" integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script>
+        <script type="text/javascript" charset="utf-8">
+            var socket = io();
+
+            socket.on('connect', function() {
+                socket.emit('my event', {data: 'I\'m connected!'});
+            });
+            socket.on('disconnect', function() {
+                socket.emit('my event', {data: 'I\'m disconnected!'});
+            });
+            {% for order in order %}
+                socket.on('vendor{{order.vendor_id}}', function(number) {
+                    let orders = document.getElementsByClassName('vendor{{order.vendor_id}}');
+
+                    for (let i = 0; i < orders.length; i++) {
+                        orders[i].innerHTML = number;
+                    }
+                });
+            {% endfor %}
+        </script>
+
     {% endblock %}
 {% endblock %}
 

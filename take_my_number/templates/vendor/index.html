@@ -1,0 +1,47 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Portfolio
+{% endblock %}
+
+{% block main %}
+        <!--- Career Form --->
+        <h3>Current Occupancy: <span id="current">{{current_occupants}}</span></h3>
+        <h3>Max Occupancy: {{max_occupants}}</h3>
+        <h3>Number Up: <span id="numberUp">{{number_up}}</span></h3>
+        <h3>User Queue: <span id="userQueue">{{user_queue}}</span></h3>
+
+            <button class="btn btn-primary" onclick="enter()">Enter Store</button>
+
+            <button class="btn btn-primary" onclick="exit()">Exit Store</button>
+            <button class="btn btn-primary" onclick="reset()">Reset Store</button>
+        </form>
+    {% block js %}
+        <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js" integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script>
+        <script type="text/javascript" charset="utf-8">
+            var socket = io("/vendor");
+
+            function enter() {
+                socket.emit('enter');
+                console.log("enter");
+            }
+            function exit() {
+                socket.emit('exit');
+            }
+            function reset() {
+                socket.emit('reset');
+            }
+
+            socket.on('current occupants', function(current_occupants) {
+                document.getElementById("current").innerHTML = current_occupants;
+            });
+            socket.on('number up', function(numberUp) {
+                document.getElementById("numberUp").innerHTML = numberUp;
+            });
+            socket.on('user queue', function(userQueue) {
+                document.getElementById("userQueue").innerHTML = userQueue;
+            });
+        </script>
+    {% endblock %}
+{% endblock %}
+

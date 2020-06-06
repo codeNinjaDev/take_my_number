@@ -23,14 +23,35 @@
         {% endif %}
 
   <hr>
-    {{ registration_form.csrf_token }}
+    {{ register_form.csrf_token }}
 
-    {{ wtf.quick_form(registration_form) }}
+    {{ wtf.quick_form(register_form) }}
   <hr>
 
 
 {% endblock %}
 
 {% block js %}
-    <script src="/static/register.js"></script>
+{% if user == "vendor" %}
+<script type="text/javascript" charset="utf-8">
+    let latitude = 0;
+    let longitude = 0;
+
+
+    function load() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(getPosition);
+        }
+    }
+    function getPosition(position) {
+        document.getElementById("latitude").value = position.coords.latitude;
+        document.getElementById("longitude").value = position.coords.longitude;
+        console.log("LOCATION: " + position.coords.longitude);
+    }
+
+
+
+</script>
+{% endif %}
 {% endblock %}
+

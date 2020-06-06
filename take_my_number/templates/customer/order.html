@@ -1,0 +1,79 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Customer
+{% endblock %}
+
+{% block main %}
+    <div>
+        <label>Range:</label>
+        <input type="number" class="form-control" id="range" value="5">
+        <button type="button" class="btn btn-primary" id="findButton" onclick="findVendors()">Find Vendors</button>
+
+    </div>
+    <select id="vendors">
+
+    </select>
+
+
+
+
+
+
+{% endblock %}
+
+    {% block js %}
+        <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js" integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script>
+        <script type="text/javascript" charset="utf-8">
+            var socket = io("/customer");
+            let latitude = 0;
+            let longitude = 0;
+            let vendor_dropdown = document.getElementById("vendors");
+
+            function load() {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(getPosition);
+                    vendor_dropdown.visible = true;
+                } else {
+                    document.getElementById("findButton").disabled = false;
+
+                }
+            }
+            function getPosition(position) {
+                latitude = position.coords.latitude;
+                longitude = position.coords.longitude;
+            }
+
+
+            function findVendors() {
+                console.log("pressed button");
+                socket.emit('get vendors', parseFloat(latitude), parseFloat(longitude), parseFloat(document.getElementById("range").value));
+            }
+
+            socket.on('connect', function() {
+                socket.emit('my event', {data: 'Order connected!'});
+            });
+            socket.on('disconnect', function() {
+                socket.emit('my event', {data: 'I\'m disconnected!'});
+            });
+            vendor_dropdown.innerHTML = "";
+            socket.on('get vendors', function(obj) {
+                let vendors = JSON.parse(obj);
+                console.log(vendors);
+                removeOptions(vendor_dropdown);
+                for (let i = 0; i < vendors.length; i++) {
+
+                  console.log(i);
+                  vendor_dropdown.options[vendor_dropdown.options.length] = new Option(vendors[i].name + " | " + vendors[i].address, vendors[i].id);
+                }
+            });
+
+        function removeOptions(selectElement) {
+           var i, L = selectElement.options.length - 1;
+           for(i = L; i >= 0; i--) {
+              selectElement.remove(i);
+           }
+        }
+        </script>
+
+    {% endblock %}
